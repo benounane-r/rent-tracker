@@ -70,6 +70,40 @@ def viewPayments(landlord_id):
 
     return payments
 
+def viewMaintenanceRequests(landlord_id):
+    conn = sqlite3.connect("rent_tracker.db")
+    cursor = conn.cursor 
+
+    cursor.execute('''SELECT maintenance.id, tenants.name, properties.address, maintenances.request, maintenece.date, maintenance.cost
+    FROM maintenance 
+    JOIN tenants ON maintenance.tenant_id = tenants.id
+    JOIN properties ON maintenance.property_id = properties.id
+    WHERE properties.landlord_id = ?
+    ORDER BY maintenance.date DESC''', (landlord_id,))
+
+    maintenance_requests = cursor.fetchall()
+    conn.close()
+
+    if maintenance_requests:
+        print("---Maintenance Requests---")
+        for index in maintenance_requests:
+            print(f"Request ID: {index[0]} | Tenant Name: {index[1]} | Property Address: {index[2]} | \nRequest: {index[3]} | Date: {index[4]} | Cost: {index[5] if index[5] else 'To Be Determined'}")
+    else :
+        print("No maintenance requests found.")
+
+def respondToMaintenanceRequest(request_id, response, cost):
+    conn = sqlite3.connect("rent_tracker.db")
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        UPDATE maintenance
+        SET response = ?, cost = ?
+        WHERE id = ?''', (response, cost, request_id))
+
+    conn.commit()
+    conn.close()
+
+    print(f"Response to maintenance request {request_id} has been recorded successfully.")
 
 # Test it
 if __name__ == "__main__":
