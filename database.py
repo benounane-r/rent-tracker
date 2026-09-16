@@ -11,7 +11,8 @@ def create_database():
             name TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
             phone TEXT NOT NULL,
-            password TEXT NOT NULL
+            password TEXT NOT NULL,
+            currency TEXT NOT NULL DEFAULT 'TL'
         )
     ''')
 

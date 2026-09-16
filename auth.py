@@ -1,12 +1,12 @@
 import sqlite3
 
-def register_landlord(name, email, phone, password):
+def register_landlord(name, email, phone, password, currency):
     conn = sqlite3.connect("rent_tracker.db")
     cursor = conn.cursor()
     try:
         cursor.execute('''
-        INSERT INTO landlords (name, email, phone, password)
-        VALUES (?, ?, ?, ?)''', (name, email, phone, password))
+        INSERT INTO landlords (name, email, phone, password, currency)
+        VALUES (?, ?, ?, ?, ?)''', (name, email, phone, password, currency))
         conn.commit()
         print(f"landlord {name} is registered")
         return True
@@ -54,5 +54,5 @@ def login(email, password, user_type):
 
 
 if __name__ == "__main__":
-    register_landlord("John Doe", "john.doe@example.com", "123-456-7890", "password123")
+    register_landlord("John Doe", "john.doe@example.com", "123-456-7890", "password123", "QR")
     login("john.doe@example.com", "password123", "landlord")
